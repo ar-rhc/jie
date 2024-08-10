@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姐!!! with iPhone Volume</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FF69B4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .volume-bar {
+            width: 8px;
+            height: 180px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            margin-left: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .volume-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            transition: height 0.3s ease;
+        }
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .text {
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" onclick="incrementVolume()">
+        <div class="text-container">
+            <div style="display: flex; align-items: center;">
+                <span class="text">姐<span id="exclamation">!</span></span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="volume-bar">
+            <div class="volume-fill" id="volumeFill"></div>
+        </div>
+    </div>
+
+    <script>
+        let volumeLevel = 1;
+        const maxVolume = 16;
+
+        function incrementVolume() {
+            if (volumeLevel < maxVolume) {
+                volumeLevel++;
+                updateExclamation();
+                updateVolumeBar();
+            }
+        }
+
+        function updateExclamation() {
+            const exclamations = Math.min(Math.ceil(volumeLevel / 2), 8);
+            document.getElementById('exclamation').textContent = '!'.repeat(exclamations);
+        }
+
+        function updateVolumeBar() {
+            const percentage = (volumeLevel / maxVolume) * 100;
+            document.getElementById('volumeFill').style.height = `${percentage}%`;
+        }
+    </script>
+</body>
+</html>
