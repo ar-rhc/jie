@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>姐!!! with iPhone Volume</title>
+    <title>姐!!! with iPhone Volume and Sound</title>
     <style>
         body {
             margin: 0;
@@ -69,26 +69,34 @@
         </div>
     </div>
 
+    <audio id="jieSound" src="jie.mp3"></audio>
+
     <script>
         let volumeLevel = 1;
         const maxVolume = 16;
+        const audio = document.getElementById('jieSound');
 
         function incrementVolume() {
             if (volumeLevel < maxVolume) {
                 volumeLevel++;
                 updateExclamation();
                 updateVolumeBar();
+                playSound();
             }
         }
 
         function updateExclamation() {
-            const exclamations = Math.min(Math.ceil(volumeLevel / 2), 8);
-            document.getElementById('exclamation').textContent = '!'.repeat(exclamations);
+            document.getElementById('exclamation').textContent += '!';
         }
 
         function updateVolumeBar() {
             const percentage = (volumeLevel / maxVolume) * 100;
             document.getElementById('volumeFill').style.height = `${percentage}%`;
+        }
+
+        function playSound() {
+            audio.currentTime = 0; // Reset the audio to the beginning
+            audio.play().catch(e => console.log("Audio play failed:", e));
         }
     </script>
 </body>
