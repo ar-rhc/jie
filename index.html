@@ -18,6 +18,10 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none; /* For IE10+/Edge */
         }
         .volume-bar {
             width: 8px;
@@ -54,7 +58,7 @@
     </style>
 </head>
 <body>
-    <div class="container" onclick="incrementVolume()">
+    <div class="container" onclick="handleClick()">
         <div class="text-container">
             <div style="display: flex; align-items: center;">
                 <span class="text">姐<span id="exclamation">!</span></span>
@@ -76,13 +80,25 @@
         const maxVolume = 16;
         const audio = document.getElementById('jieSound');
 
-        function incrementVolume() {
-            if (volumeLevel < maxVolume) {
-                volumeLevel++;
-                updateExclamation();
-                updateVolumeBar();
-                playSound();
+        function handleClick() {
+            playSound();
+            if (volumeLevel >= maxVolume) {
+                resetAnimation();
+            } else {
+                incrementVolume();
             }
+        }
+
+        function incrementVolume() {
+            volumeLevel++;
+            updateExclamation();
+            updateVolumeBar();
+        }
+
+        function resetAnimation() {
+            volumeLevel = 1;
+            document.getElementById('exclamation').textContent = '!';
+            updateVolumeBar();
         }
 
         function updateExclamation() {
@@ -95,8 +111,9 @@
         }
 
         function playSound() {
-            audio.currentTime = 0; // Reset the audio to the beginning
-            audio.play().catch(e => console.log("Audio play failed:", e));
+            // Create a new Audio object each time to allow overlapping sounds
+            const sound = new Audio('jie.mp3');
+            sound.play().catch(e => console.log("Audio play failed:", e));
         }
     </script>
 </body>
