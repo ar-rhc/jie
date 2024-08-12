@@ -18,10 +18,10 @@
             display: flex;
             align-items: center;
             cursor: pointer;
-            user-select: none; /* Prevents text selection */
-            -webkit-user-select: none; /* For Safari */
-            -moz-user-select: none; /* For Firefox */
-            -ms-user-select: none; /* For IE10+/Edge */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         .volume-bar {
             width: 8px;
@@ -73,15 +73,43 @@
         </div>
     </div>
 
-    <audio id="jieSound" src="jie.mp3"></audio>
+    <audio id="soundA" src="a.mp3"></audio>
+    <audio id="soundB" src="b.mp3"></audio>
 
     <script>
         let volumeLevel = 1;
         const maxVolume = 16;
-        const audio = document.getElementById('jieSound');
+        const soundA = document.getElementById('soundA');
+        const soundB = document.getElementById('soundB');
+        let lastClickTime = 0;
+        let clickTimeout;
 
         function handleClick() {
-            playSound();
+            const currentTime = new Date().getTime();
+            
+            if (currentTime - lastClickTime > 1000) {
+                // If it's been more than 1 second since the last click, play sound A
+                playSound(soundA);
+            } else {
+                // If it's within 1 second of the last click, continue or restart sound A
+                if (soundA.currentTime > 0 && soundA.currentTime < 1) {
+                    // If sound A is still playing (within 1s), do nothing
+                } else {
+                    // If sound A has finished or hasn't started, play it from the beginning
+                    playSound(soundA);
+                }
+            }
+
+            // Clear any existing timeout
+            clearTimeout(clickTimeout);
+
+            // Set a new timeout to play sound B after 1 second of inactivity
+            clickTimeout = setTimeout(() => {
+                playSound(soundB);
+            }, 1000);
+
+            lastClickTime = currentTime;
+
             if (volumeLevel >= maxVolume) {
                 resetAnimation();
             } else {
@@ -110,9 +138,8 @@
             document.getElementById('volumeFill').style.height = `${percentage}%`;
         }
 
-        function playSound() {
-            // Create a new Audio object each time to allow overlapping sounds
-            const sound = new Audio('jie.mp3');
+        function playSound(sound) {
+            sound.currentTime = 0; // Reset the audio to the beginning
             sound.play().catch(e => console.log("Audio play failed:", e));
         }
     </script>
